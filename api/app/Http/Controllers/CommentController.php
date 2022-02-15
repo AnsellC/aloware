@@ -16,7 +16,7 @@ class CommentController extends Controller
         // check if parent_id is depth=3 already
         if ($request->parent_id) {
             $parent = Comment::find($request->parent_id);
-            if ($parent->depth > 3) {
+            if ($parent->depth >= 3) {
                 return response()->json([
                     'message' => 'Comment depth is too deep.',
                 ], 422);
