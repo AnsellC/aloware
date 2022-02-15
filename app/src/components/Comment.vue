@@ -45,6 +45,11 @@
 
         <span class="text-gray-400 text-sm mr-2">&#8212;</span>
         <span class="text-gray-500 text-lg">{{ comment.comment }}</span>
+        <comment-box
+            @close="replyBox = false"
+            v-if="replyBox"
+            :parent-id="comment.id"
+        ></comment-box>
 
         <!--children-->
         <template v-if="comment.children.length > 0">
@@ -54,12 +59,6 @@
                 :comment="childComment"
             ></comment>
         </template>
-
-        <comment-box
-            @close="replyBox = false"
-            v-if="replyBox"
-            :parent-id="comment.id"
-        ></comment-box>
     </div>
 </template>
 <script lang="ts">
