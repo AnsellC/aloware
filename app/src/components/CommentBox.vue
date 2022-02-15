@@ -22,11 +22,12 @@
     </div>
 </template>
 <script lang="ts">
-import { Component } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import BaseClass from '../base';
 
 @Component
 export default class CommentBoxComponent extends BaseClass {
+    @Prop(Number) readonly parentId!: number;
     name = '';
     comment = '';
     loading = false;
@@ -38,18 +39,21 @@ export default class CommentBoxComponent extends BaseClass {
     async post() {
         this.loading = true;
         try {
-            const response = await fetch(`http://localhost/api/comments`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    name: this.name,
-                    comment: this.comment,
-                    parent_id: 1,
-                }),
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            });
+            const response = await fetch(
+                `${this.config.api_endpoint}/comments`,
+                {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        name: this.name,
+                        comment: this.comment,
+                        parent_id: this.parentId,
+                    }),
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
             const json = await response.json();
             if (!response.ok) {
                 throw new Error(json.message);
@@ -60,7 +64,8 @@ export default class CommentBoxComponent extends BaseClass {
                 message: 'Comment posted successfully.',
             });
 
-            this.$emit('posted', json);
+            this.$root.$emit('RELOAD_COMMENT');
+            this.$emit('close');
         } catch (error) {
             this.$root.$emit('MESSAGE_BOX', {
                 type: 'ERROR',
