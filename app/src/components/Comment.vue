@@ -16,7 +16,7 @@
                     :src="`https://i.pravatar.cc/150?u=${comment.name}`"
                 />
                 <span class="text-lg font-bold text-red-400 mr-1">
-                    {{ comment.name }} {{ comment.depth }}
+                    {{ comment.name }}
                 </span>
                 <span class="text-gray-400 text-sm">
                     {{ comment.created_at | dateFromNow }}
